@@ -1,0 +1,31 @@
+import pandas as pd
+import statsmodels.formula.api as smf
+import numpy as np
+# IV: D_HBR_B (Change in Hectares Burned Rate, 2023 - 2021)
+# DV: D_ODR_B (Change in Opioid Death Rate, 2023 - 2021)
+# M: D_DR_B (Change in Distress Rate, 2023 - 2021)
+data_baseline = {
+    'Province': ['BC', 'AB', 'SK', 'MB', 'ON', 'QC', 'NL', 'NB', 'NS', 'PE'],
+    'D_HBR_B': [0.003752, 0.024552, -0.628526, 0.0, 0.00008, -0.000019, 0.0, 0.000007, 0.000296, 0.000052],
+    'D_ODR_B': [23.1, 2.8, 0.7, 5.8, -3.0, -0.1, 1.4, 7.8, -0.5, 0.4],
+    'D_DR_B': [0.883, -2.23, -0.833, 2.833, -0.83, 0.717, 0.28, 3.483, 8.12, 3.45]
+}
+
+df_baseline = pd.DataFrame(data_baseline)
+
+# --- 1. Step A: Total Effect (IV -> DV) ---
+# D_ODR_B ~ D_HBR_B
+model_total_effect_b = smf.ols('D_ODR_B ~ D_HBR_B', data=df_baseline).fit()
+
+# --- 2. Step B: Path A (IV -> M) ---
+# D_DR_B ~ D_HBR_B
+model_path_a_b = smf.ols('D_DR_B ~ D_HBR_B', data=df_baseline).fit()
+
+# --- 3. Step C: Mediation (IV + M -> DV) ---
+# D_ODR_B ~ D_HBR_B + D_DR_B
+model_mediation_b = smf.ols('D_ODR_B ~ D_HBR_B + D_DR_B', data=df_baseline).fit()
+
+# The final regression summary tables
+# print(model_total_effect_b.summary())
+# print(model_path_a_b.summary())
+# print(model_mediation_b.summary())
