@@ -37,7 +37,7 @@ df_lagged['Y'] = (df_lagged['Y_rate'] - df_lagged['Y_rate'].mean()) / df_lagged[
 
 # Bootstrapping Procedure for Indirect Effect (a*b)
 np.random.seed(42) # Set seed for reproducibility
-B = 10000  # Number of bootstrap samples
+B = 20000  # Number of bootstrap samples
 indirect_effects = []
 for i in range(B):
     # Resample the data (with replacement)
@@ -79,3 +79,20 @@ print(f"95% CI Lower Bound: {lower_bound:.4f}")
 print(f"95% CI Upper Bound: {upper_bound:.4f}")
 print(f"Total Effect (c): {total_effect_c:.4f}")
 print(f"Direct Effect (c'): {direct_effect_c_prime:.4f}")
+
+#Bootstrap samples:20,000
+#Indirect Effect (a*b): 0.0409
+#-of the estimated effect of .2980, .0409 of that change is specifically explained by X→M→Y
+#95% CI Lower Bound: -0.0000
+#95% CI Upper Bound: 0.1183
+#-CI boundaries are close to zero, but with number of iterations effect is real but likely weak
+#Total Effect (c): 0.2980
+#-for every 1-unit increase in forest fire rates there is a 0.2980-unit increase in opioid-related deaths
+#Direct Effect (c'): 0.2571
+#-for every 1-unit increase in forest fire rates there is a .2571-unit increase in opioid-related deaths, after controlling for M
+#-the direct effect is 6.3X larger than the indirect effect (.2571/.0409=6.3), 86.3% remains unexplained
+#Indirect/total=13.7% (amount of data channeled through pathway)
+#-86.3% remains unexplained (ex/economic social factors, health systems, other environmental factors, also hospitalizations only include acute distress)
+#-undeniable significance but small magnitude
+#Forest fires rates are associated with with up to a 13.7% increase in opioid-related deaths, specifically through a transmitted pathway involving high distress characterized by mental health hospitalizations
+
